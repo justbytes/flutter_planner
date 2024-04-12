@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/todo/components/todo_text_field.dart';
 import 'package:flutter_planner/todo/components/todo_title_text.dart';
-import 'package:flutter_planner/cubit/todo_cubit.dart';
+import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({super.key});

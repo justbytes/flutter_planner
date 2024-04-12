@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_planner/cubit/todo_cubit.dart';
+import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 import 'package:flutter_planner/models/todo_model.dart';
 
 class TodoPage extends StatelessWidget {
