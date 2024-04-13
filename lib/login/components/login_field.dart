@@ -5,10 +5,10 @@ class LoginField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   const LoginField({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

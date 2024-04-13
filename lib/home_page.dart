@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_planner/global_components/app_bar_title.dart';
+import 'package:flutter_planner/global_components/reverse_gradient_button.dart';
 import 'package:flutter_planner/login/bloc/auth_bloc.dart';
-import 'package:flutter_planner/login/components/gradient_button.dart';
+import 'package:flutter_planner/global_components/gradient_button.dart';
 import 'package:flutter_planner/login/login_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,7 +13,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home"),
+        title: const AppBarTitle(
+          title: "Home",
+        ),
+        centerTitle: true,
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -27,19 +32,42 @@ class HomePage extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is AuthSuccess) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome, User ${state.uid}',
-                ), // Displaying the user ID from AuthSuccess
-                GradientButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(AuthLogoutRequested());
-                  },
-                  text: 'Log Out',
-                ),
-              ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome, User ${state.uid}',
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  GradientButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/todo');
+                    },
+                    text: 'What Todo',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ReverseGradientButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/weather');
+                    },
+                    text: 'Weather Center',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GradientButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(AuthLogoutRequested());
+                    },
+                    text: 'Log Out',
+                  ),
+                ],
+              ),
             );
           }
           if (state is AuthLoading) {

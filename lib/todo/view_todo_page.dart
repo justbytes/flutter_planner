@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_planner/todo/components/app_bar_title.dart';
+import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/todo/components/todo_form.dart';
 import 'package:flutter_planner/todo/components/todo_option_buttons.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';

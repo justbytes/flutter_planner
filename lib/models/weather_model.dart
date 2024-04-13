@@ -1,18 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 class WeatherModel {
-  // final currentTemp = currentWeatherData['main']['temp'];
-  // final currentSky = currentWeatherData['weather'][0]['main'];
-  // final currentPressure = currentWeatherData['main']['pressure'];
-  // final currentWindSpeed = currentWeatherData['wind']['speed'];
-  // final currentHumidity = currentWeatherData['main']['humidity'];
-
-  final double currentTemp;
+  final num currentTemp;
   final String currentSky;
-  final int currentPressure;
-  final double currentWindSpeed;
-  final int currentHumidity;
+  final num currentPressure;
+  final num currentWindSpeed;
+  final num currentHumidity;
   WeatherModel({
     required this.currentTemp,
     required this.currentSky,
@@ -22,11 +13,11 @@ class WeatherModel {
   });
 
   WeatherModel copyWith({
-    double? currentTemp,
+    num? currentTemp,
     String? currentSky,
-    int? currentPressure,
-    double? currentWindSpeed,
-    int? currentHumidity,
+    num? currentPressure,
+    num? currentWindSpeed,
+    num? currentHumidity,
   }) {
     return WeatherModel(
       currentTemp: currentTemp ?? this.currentTemp,
@@ -57,35 +48,5 @@ class WeatherModel {
       currentWindSpeed: currentWeatherData['wind']['speed'],
       currentHumidity: currentWeatherData['main']['humidity'],
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory WeatherModel.fromJson(String source) =>
-      WeatherModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'WeatherModel(currentTemp: $currentTemp, currentSky: $currentSky, currentPressure: $currentPressure, currentWindSpeed: $currentWindSpeed, currentHumidity: $currentHumidity)';
-  }
-
-  @override
-  bool operator ==(covariant WeatherModel other) {
-    if (identical(this, other)) return true;
-
-    return other.currentTemp == currentTemp &&
-        other.currentSky == currentSky &&
-        other.currentPressure == currentPressure &&
-        other.currentWindSpeed == currentWindSpeed &&
-        other.currentHumidity == currentHumidity;
-  }
-
-  @override
-  int get hashCode {
-    return currentTemp.hashCode ^
-        currentSky.hashCode ^
-        currentPressure.hashCode ^
-        currentWindSpeed.hashCode ^
-        currentHumidity.hashCode;
   }
 }

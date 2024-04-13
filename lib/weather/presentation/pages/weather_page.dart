@@ -1,8 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/weather/bloc/weather_bloc.dart';
 import 'package:flutter_planner/weather/presentation/components/additional_info_item.dart';
+import 'package:flutter_planner/weather/presentation/components/hourly_forecast_item.dart';
+import 'package:flutter_planner/weather/utils/date_format.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -22,11 +25,8 @@ class _WeatherScreenState extends State<WeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Weather App',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+        title: const AppBarTitle(
+          title: "Weather App",
         ),
         centerTitle: true,
         actions: [
@@ -85,7 +85,7 @@ class _WeatherScreenState extends State<WeatherPage> {
                           child: Column(
                             children: [
                               Text(
-                                '$currentTemp K',
+                                '$currentTemp F',
                                 style: const TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
@@ -121,28 +121,26 @@ class _WeatherScreenState extends State<WeatherPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // SizedBox(
-                //   height: 120,
-                //   child: ListView.builder(
-                //     itemCount: 5,
-                //     scrollDirection: Axis.horizontal,
-                //     itemBuilder: (context, index) {
-                //       final hourlyForecast = data['list'][index + 1];
-                //       final hourlySky =
-                //           data['list'][index + 1]['weather'][0]['main'];
-                //       final hourlyTemp =
-                //           hourlyForecast['main']['temp'].toString();
-                //       final time = DateTime.parse(hourlyForecast['dt_txt']);
-                //       return HourlyForecastItem(
-                //         time: DateFormat.j().format(time),
-                //         temperature: hourlyTemp,
-                //         icon: hourlySky == 'Clouds' || hourlySky == 'Rain'
-                //             ? Icons.cloud
-                //             : Icons.sunny,
-                //       );
-                //     },
-                //   ),
-                // ),
+                SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    itemCount: 5,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      final data = state.hourlyWeatherModel.hourlyData[index];
+
+                      String formattedTime = formatTime(data.hourTime);
+
+                      return HourlyForecastItem(
+                        time: formattedTime,
+                        temperature: data.hourTemp.toStringAsFixed(1),
+                        icon: data.hourSky == 'Clouds' || data.hourSky == 'Rain'
+                            ? Icons.cloud
+                            : Icons.sunny,
+                      );
+                    },
+                  ),
+                ),
 
                 const SizedBox(height: 20),
                 const Text(
