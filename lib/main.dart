@@ -48,9 +48,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.dark(useMaterial3: true),
           initialRoute: '/',
           routes: {
-            '/': (_) => const WeatherPage(),
+            '/f': (_) => const LoginPage(),
             '/home': (_) => const HomePage(),
-            '/todo': (_) => const TodoPage(),
+            '/': (_) => const TodoPage(),
             '/add-todo': (_) => const AddTodoPage(),
             '/edit-todo': (_) => EditTodoPage(),
             '/view-todo': (_) => const ViewTodoPage(),

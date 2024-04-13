@@ -1,7 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/models/todo_model.dart';
 import 'package:uuid/uuid.dart';
+
+/*
+  TodoCubit handles the state of the todos
+*/
 
 class TodoCubit extends Cubit<List<Todo>> {
   TodoCubit() : super([]);
@@ -77,22 +80,6 @@ class TodoCubit extends Cubit<List<Todo>> {
 
       // Emit the updated todo list as the new state
       emit(updatedTodos);
-    }
-  }
-
-  @override
-  void onChange(Change<List<Todo>> change) {
-    super.onChange(change);
-    if (kDebugMode) {
-      print('TodoCubit - $change');
-    }
-  }
-
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
-    if (kDebugMode) {
-      print('TodoCubit - $error');
     }
   }
 }

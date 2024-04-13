@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_planner/todo/components/todo_text.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 import 'package:flutter_planner/models/todo_model.dart';
+
+/*
+________________________________________________________________________________
+  
+  Route name: /finished-todo
+    Accessed by:
+      Route /todo-page
+        todo_page.dart with no arguments
+    
+    Access to:
+      Route /todo
+        /finished_todo_page.dart sending no arguments
+
+      Route /view-todo
+        /view_todo_page.dart sending one arguments
+          - <String> todo.id = the id of the todo that the user wants to view
+________________________________________________________________________________
+
+  Stateless class FinishedTodoPage
+    Displays all todos with the 'finished' value set to true - Finished todos
+________________________________________________________________________________
+
+  State Manager: TodoCubit
+________________________________________________________________________________
+*/
 
 class FinishedTodoPage extends StatelessWidget {
   const FinishedTodoPage({
@@ -11,9 +37,7 @@ class FinishedTodoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple[300],
       appBar: AppBar(
-        backgroundColor: Colors.purple[600],
         title: const Text('Finished Todos',
             style: TextStyle(
               fontSize: 36,
@@ -37,7 +61,9 @@ class FinishedTodoPage extends StatelessWidget {
                         border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(5)),
                     child: ListTile(
-                      title: Text(todo.name),
+                      title: TodoText(
+                        text: todo.name,
+                      ),
                       onTap: () {
                         Navigator.pushNamed(context, '/view-todo',
                             arguments: todo.id);
@@ -47,13 +73,6 @@ class FinishedTodoPage extends StatelessWidget {
                 );
               });
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add-todo');
-        },
-        tooltip: 'Add Todo',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -1,102 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_planner/todo/components/todo_text_field.dart';
-import 'package:flutter_planner/todo/components/todo_title_text.dart';
+import 'package:flutter_planner/login/components/gradient_button.dart';
+import 'package:flutter_planner/todo/components/app_bar_title.dart';
+import 'package:flutter_planner/todo/components/todo_form.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 import 'package:flutter_planner/models/todo_model.dart';
 
+/*
+________________________________________________________________________________
+  
+  Route name: /edit-todo
+    Accessed by:
+      Route /view-todo
+        /view_todo_page.dart with one arguments of
+          - <Todo> todo - used to access title and description
+    
+    Access to:
+      Route /view-todo
+        /view_todo_page.dart sending one arguments
+          - <String> todo.id = the id of the todo that the user wants to view
+________________________________________________________________________________
+
+  Stateless class EditTodoPage
+    Displays the selected todo with the ability to edit and update the state
+________________________________________________________________________________
+
+  State Manager: TodoCubit
+    Events
+      editTodo(todo.id, todoTitleController, todoDescriptionController);
+       - Updates the todo's title and description field
+________________________________________________________________________________
+*/
+
 class EditTodoPage extends StatelessWidget {
-  EditTodoPage({
-    super.key,
-  });
+  EditTodoPage({super.key});
 
-  final _todoTitleController = TextEditingController();
-
-  final _todoDescriptionController = TextEditingController();
+  // Declare text controllers
+  //
+  final todoTitleController = TextEditingController();
+  final todoDescriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final todo = ModalRoute.of(context)!.settings.arguments as Todo;
 
-    _todoTitleController.text = todo.name;
-    _todoDescriptionController.text = todo.description;
+    // Set textController values to the current value of todo
+    //
+    todoTitleController.text = todo.name;
+    todoDescriptionController.text = todo.description;
 
     return Scaffold(
-      backgroundColor: Colors.purple[300],
       appBar: AppBar(
-        backgroundColor: Colors.purple[600],
-        title: const Text('Todo',
-            style: TextStyle(
-              fontSize: 36,
-              color: Color.fromARGB(255, 242, 239, 239),
-              fontWeight: FontWeight.bold,
-            )),
+        title: const AppBarTitle(
+          title: "Edit Todo",
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              // added space
+              // added from top
+              //
               const SizedBox(height: 10),
 
-              // title of todo textfield
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const TodoTitleText(text: "Title"),
-                  TodoTextField(
-                    controller: _todoTitleController,
-                    enabled: true,
-                    maxLines: 1,
-                    hintText: "Enter Title",
-                    filled: true,
-                    color: const Color.fromARGB(255, 242, 239, 239),
-                  ),
-                ],
+              // TodoForm
+              // holds tile and description textfields
+              // [titleController] - TextController for title field
+              // [descriptionController] - TextController for description field
+              // [enable] - bool that determins if the fields are editable
+              //
+              TodoForm(
+                enable: true,
+                titleController: todoTitleController,
+                descriptionController: todoDescriptionController,
               ),
 
               // added space
+              //
               const SizedBox(height: 10),
 
-              // description of todo textfield
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const TodoTitleText(text: "Description"),
-                  TodoTextField(
-                    controller: _todoDescriptionController,
-                    enabled: true,
-                    maxLines: 10,
-                    hintText: "Enter Description",
-                    filled: true,
-                    color: const Color.fromARGB(255, 242, 239, 239),
-                  ),
-                ],
-              ),
-
-              // added space
-              const SizedBox(height: 10),
-              // button to add new todo to state
-              SizedBox(
-                width: 100,
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: () {
-                      BlocProvider.of<TodoCubit>(context).editTodo(
-                        todo.id,
-                        _todoTitleController.text.trim(),
-                        _todoDescriptionController.text.trim(),
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: const Text('Edit')),
+              // Calls TodoCubit and updates current state to the todo
+              // sends user back to view_todo_page.dart when finished
+              //
+              GradientButton(
+                onPressed: () {
+                  // update todo by sending current values and todo id
+                  //
+                  BlocProvider.of<TodoCubit>(context).editTodo(
+                    todo.id,
+                    todoTitleController.text.trim(),
+                    todoDescriptionController.text.trim(),
+                  );
+                  Navigator.of(context).pop();
+                },
+                text: "Edit",
               ),
             ],
           ),
