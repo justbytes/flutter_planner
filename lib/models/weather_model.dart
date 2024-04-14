@@ -4,12 +4,15 @@ class WeatherModel {
   final num currentPressure;
   final num currentWindSpeed;
   final num currentHumidity;
+  final HourlyWeatherModel hourlyWeather;
+
   WeatherModel({
     required this.currentTemp,
     required this.currentSky,
     required this.currentPressure,
     required this.currentWindSpeed,
     required this.currentHumidity,
+    required this.hourlyWeather,
   });
 
   WeatherModel copyWith({
@@ -18,6 +21,7 @@ class WeatherModel {
     num? currentPressure,
     num? currentWindSpeed,
     num? currentHumidity,
+    HourlyWeatherModel? hourlyWeatherModel,
   }) {
     return WeatherModel(
       currentTemp: currentTemp ?? this.currentTemp,
@@ -25,6 +29,7 @@ class WeatherModel {
       currentPressure: currentPressure ?? this.currentPressure,
       currentWindSpeed: currentWindSpeed ?? this.currentWindSpeed,
       currentHumidity: currentHumidity ?? this.currentHumidity,
+      hourlyWeather: hourlyWeather,
     );
   }
 
@@ -35,6 +40,7 @@ class WeatherModel {
       'currentPressure': currentPressure,
       'currentWindSpeed': currentWindSpeed,
       'currentHumidity': currentHumidity,
+      'hourlyWeather': hourlyWeather.toMap(),
     };
   }
 
@@ -47,6 +53,55 @@ class WeatherModel {
       currentPressure: currentWeatherData['main']['pressure'],
       currentWindSpeed: currentWeatherData['wind']['speed'],
       currentHumidity: currentWeatherData['main']['humidity'],
+      hourlyWeather: HourlyWeatherModel.fromMap(map),
+    );
+  }
+}
+
+class HourlyWeatherModel {
+  final List<HourlyData> hourlyData;
+
+  HourlyWeatherModel({required this.hourlyData});
+
+  factory HourlyWeatherModel.fromMap(Map<String, dynamic> map) {
+    List<HourlyData> hourlyData = [];
+    List<dynamic> dataList = map['list'];
+    for (var data in dataList) {
+      hourlyData.add(HourlyData.fromMap(data));
+    }
+    return HourlyWeatherModel(hourlyData: hourlyData);
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'hourlyData': hourlyData.map((data) => data.toMap()).toList(),
+    };
+  }
+}
+
+class HourlyData {
+  final num hourTemp;
+  final String hourSky;
+  final String hourTime;
+
+  HourlyData({
+    required this.hourTemp,
+    required this.hourSky,
+    required this.hourTime,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'hourTemp': hourTemp,
+      'hourSky': hourSky,
+      'hourTime': hourTime,
+    };
+  }
+
+  factory HourlyData.fromMap(Map<String, dynamic> data) {
+    return HourlyData(
+      hourTemp: data['main']['temp'],
+      hourSky: data['weather'][0]['main'],
+      hourTime: data['dt_txt'],
     );
   }
 }

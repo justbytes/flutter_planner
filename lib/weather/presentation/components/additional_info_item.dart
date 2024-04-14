@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+/* 
+________________________________________________________________________________
+Stateless AdditionalInfoItem
+  Custom component that can hold weather data values with a label and icon
+  
+  Takes 3 arguments
+  icon - String containing the weather icon
+  label - String that descrbies the data value i.e pressure, humidity..
+  value - String the weather data value 
+________________________________________________________________________________
+*/
+
 class AdditionalInfoItem extends StatelessWidget {
   final IconData icon;
   final String label;

@@ -9,26 +9,32 @@ import 'package:uuid/uuid.dart';
 class TodoCubit extends Cubit<List<Todo>> {
   TodoCubit() : super([]);
 
+  // find and return a Todo by its id
+  //
   Todo? getTodoById(String id) {
     try {
       return state.firstWhere((todo) => todo.id == id);
     } catch (e) {
-      // Return null if todo with the given id is not found
       return null;
     }
   }
 
+  // Add a new todo
+  //
   void addTodo(String title, String description) {
     // UUID to create a unique id for a todo
+    //
     const uuid = Uuid();
 
     // Check for empty title
+    //
     if (title.isEmpty) {
       addError("Title cannot be empty");
       return;
     }
 
-    // create new todo
+    // create new todo using the TodoModel
+    //
     final todo = Todo(
         id: uuid.v4(),
         name: title,
@@ -37,48 +43,54 @@ class TodoCubit extends Cubit<List<Todo>> {
         finished: false);
 
     // add new todo to previous state
+    //
     emit([todo, ...state]);
   }
 
+  // Edit a todo by id
+  //
   void editTodo(String id, String title, String description) {
-    // Find the index of the Todo to update
     int todoIndex = state.indexWhere((todo) => todo.id == id);
 
-    // Check to see if todo exists
     if (todoIndex != -1) {
-      // Copy the current state to a new list to modify
+      // Make a list of todos
+      //
       final List<Todo> updatedTodos = List.from(state);
 
-      // Update the todo item at the found index
+      // Update todo with new title and description
+      //
       updatedTodos[todoIndex] = updatedTodos[todoIndex].copyWith(
         name: title,
         description: description,
       );
 
       // Emit the updated todo list as the new state
+      //
       emit(updatedTodos);
     }
   }
 
   // Mark the todo finished
+  //
   void finishTodo(String id, bool finish) {
-    // finished is the opposite of whatever the current state to add the
-    // todo back if its not done
     bool finished = !finish;
 
-    // get a specific todo by the id
+    // Id of todo
+    //
     int todoIndex = state.indexWhere((todo) => todo.id == id);
 
-    // if todo exists
     if (todoIndex != -1) {
-      // Copy the current state to a new list to modify
+      // Make a list of todos
+      //
       final List<Todo> updatedTodos = List.from(state);
 
-      // Update the todo item at the found index
+      // updated the todo with the new finished value
+      //
       updatedTodos[todoIndex] =
           updatedTodos[todoIndex].copyWith(finished: finished);
 
       // Emit the updated todo list as the new state
+      //
       emit(updatedTodos);
     }
   }

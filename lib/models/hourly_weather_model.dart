@@ -14,7 +14,7 @@ class HourlyWeatherModel {
 }
 
 class HourlyData {
-  final double hourTemp;
+  final num hourTemp;
   final String hourSky;
   final String hourTime;
 

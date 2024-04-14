@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 
+/* 
+________________________________________________________________________________
+Stateless class HourlyForecastItem
+  List item that contains the time, temp, and weather icon of an hourly forecast
+  
+  Takes 2 arguments
+  sky - String containing the weather icon
+  temp - String of the current temp
+  time - String of the current time formatted to h:mm a
+________________________________________________________________________________
+*/
+
 class HourlyForecastItem extends StatelessWidget {
   final String time;
   final String temperature;
-  final IconData icon;
+  final String sky;
+
   const HourlyForecastItem({
     super.key,
     required this.time,
     required this.temperature,
-    required this.icon,
+    required this.sky,
   });
 
   @override
@@ -34,7 +47,7 @@ class HourlyForecastItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Icon(
-              icon,
+              sky == 'Clouds' || sky == 'Rain' ? Icons.cloud : Icons.sunny,
               size: 32,
             ),
             const SizedBox(height: 8),

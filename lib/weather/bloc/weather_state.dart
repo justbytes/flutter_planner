@@ -7,12 +7,8 @@ final class WeatherInitial extends WeatherState {}
 
 final class WeatherSuccess extends WeatherState {
   final WeatherModel weatherModel;
-  final HourlyWeatherModel hourlyWeatherModel;
 
-  WeatherSuccess({
-    required this.weatherModel,
-    required this.hourlyWeatherModel,
-  });
+  WeatherSuccess({required this.weatherModel});
 }
 
 final class WeatherFailure extends WeatherState {

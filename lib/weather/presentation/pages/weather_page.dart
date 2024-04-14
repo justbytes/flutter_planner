@@ -1,11 +1,38 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/weather/bloc/weather_bloc.dart';
 import 'package:flutter_planner/weather/presentation/components/additional_info_item.dart';
 import 'package:flutter_planner/weather/presentation/components/hourly_forecast_item.dart';
+import 'package:flutter_planner/weather/presentation/components/main_weather_card.dart';
 import 'package:flutter_planner/weather/utils/date_format.dart';
+
+/*
+________________________________________________________________________________
+  
+  Route name: /weather
+    Accessed by:
+      Route /main-page
+        main_page.dart with no arguments
+    
+    Access to:
+      Route /
+        /main_page.dart sending no arguments
+________________________________________________________________________________
+
+  Stateless class WeatherPage
+    Displays current weather and conditions for a city
+
+    Displays hourly weather with the temp and weather condition icon 
+      it has 5 tiles that 3 hours apart in time with the predicted weather
+
+    Displays Temp, humidity, pressure, wind speed, weather condition icon
+________________________________________________________________________________
+
+  State Manager: WeatherBloc
+    WeatherFetched() - gets the current weather
+________________________________________________________________________________
+*/
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -30,6 +57,8 @@ class _WeatherScreenState extends State<WeatherPage> {
         ),
         centerTitle: true,
         actions: [
+          // Refetch weather data
+          //
           IconButton(
             onPressed: () {
               context.read<WeatherBloc>().add(WeatherFetched());
@@ -40,79 +69,48 @@ class _WeatherScreenState extends State<WeatherPage> {
       ),
       body: BlocBuilder<WeatherBloc, WeatherState>(
         builder: (context, state) {
+          // If the current state has an error display the error
+          // returned by the WeatherFailure
+          //
           if (state is WeatherFailure) {
             return Center(
               child: Text(state.error),
             );
           }
 
+          // If the state is not WeatherSuccess display the spinning progress
+          // indicator
+          //
           if (state is! WeatherSuccess) {
             return const Center(
               child: CircularProgressIndicator.adaptive(),
             );
           }
 
+          // Set data to the current weather model
+          //
           final data = state.weatherModel;
+          print(data);
 
-          final currentTemp = data.currentTemp;
-          final currentSky = data.currentSky;
-          final currentPressure = data.currentPressure;
-          final currentWindSpeed = data.currentWindSpeed;
-          final currentHumidity = data.currentHumidity;
-
+          // Displayed when state = WeatherSuccess
+          //
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // main card
-                SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 10,
-                          sigmaY: 10,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                '$currentTemp F',
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Icon(
-                                currentSky == 'Clouds' || currentSky == 'Rain'
-                                    ? Icons.cloud
-                                    : Icons.sunny,
-                                size: 64,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                currentSky,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // MainWeatherCard
+                // [sky] - String of the icon describing the weather
+                // [temp] - Number of the current temp
+                //
+                MainWeatherCard(sky: data.currentSky, temp: data.currentTemp),
+
+                // Space between widgets
+                //
                 const SizedBox(height: 20),
+
+                // Start of Hourly forecast section
+                //
                 const Text(
                   'Hourly Forecast',
                   style: TextStyle(
@@ -120,29 +118,51 @@ class _WeatherScreenState extends State<WeatherPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
+                // Space between widgets
+                //
                 const SizedBox(height: 8),
+
+                // Iterates through the ['list'] field and returns the hourly report
+                //
                 SizedBox(
                   height: 120,
                   child: ListView.builder(
                     itemCount: 5,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      final data = state.hourlyWeatherModel.hourlyData[index];
+                      // Set data to the current hour being iterated
+                      final data = state
+                          .weatherModel.hourlyWeather.hourlyData[index + 1];
 
+                      // formatTime - /utils/date_formate.dart
+                      // formats the date "yyyy-MM-dd HH:mm:ss" to "h:mm a"
+                      // requires one parameter that is a String of the time
+                      //
                       String formattedTime = formatTime(data.hourTime);
 
+                      // HourlyForecastItem
+                      //  displays the hour weather tile
+                      // [time] - String to display the time
+                      // [temperature] - String to display the temp
+                      // [sky] - String to determin the icon for the hours weather
+                      //
                       return HourlyForecastItem(
                         time: formattedTime,
                         temperature: data.hourTemp.toStringAsFixed(1),
-                        icon: data.hourSky == 'Clouds' || data.hourSky == 'Rain'
-                            ? Icons.cloud
-                            : Icons.sunny,
+                        sky: data.hourSky,
                       );
                     },
                   ),
                 ),
 
+                // Space between widgets
+                //
                 const SizedBox(height: 20),
+
+                // Start of Additinaol information section at the bottom of page
+                // Displays the pressure, wind speed, and humidity
+                //
                 const Text(
                   'Additional Information',
                   style: TextStyle(
@@ -150,24 +170,31 @@ class _WeatherScreenState extends State<WeatherPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
+                // Space between widgets
+                //
                 const SizedBox(height: 8),
+
+                // Row that contains the current weather data
+                // wind speed, humidity, and pressure
+                //
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     AdditionalInfoItem(
                       icon: Icons.water_drop,
                       label: 'Humidity',
-                      value: currentHumidity.toString(),
+                      value: data.currentHumidity.toString(),
                     ),
                     AdditionalInfoItem(
                       icon: Icons.air,
                       label: 'Wind Speed',
-                      value: currentWindSpeed.toString(),
+                      value: data.currentWindSpeed.toString(),
                     ),
                     AdditionalInfoItem(
                       icon: Icons.beach_access,
                       label: 'Pressure',
-                      value: currentPressure.toString(),
+                      value: data.currentPressure.toString(),
                     ),
                   ],
                 ),
