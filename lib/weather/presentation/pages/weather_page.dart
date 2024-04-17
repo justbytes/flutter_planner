@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
+import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/weather/bloc/weather_bloc.dart';
 import 'package:flutter_planner/weather/presentation/components/additional_info_item.dart';
 import 'package:flutter_planner/weather/presentation/components/hourly_forecast_item.dart';
@@ -67,139 +68,155 @@ class _WeatherScreenState extends State<WeatherPage> {
           ),
         ],
       ),
-      body: BlocBuilder<WeatherBloc, WeatherState>(
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          // If the current state has an error display the error
-          // returned by the WeatherFailure
-          //
-          if (state is WeatherFailure) {
-            return Center(
-              child: Text(state.error),
-            );
-          }
-
-          // If the state is not WeatherSuccess display the spinning progress
-          // indicator
-          //
-          if (state is! WeatherSuccess) {
+          if (state is AuthLoading) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(),
+              child: CircularProgressIndicator(),
             );
           }
 
-          // Set data to the current weather model
-          //
-          final data = state.weatherModel;
-          print(data);
+          if (state is AuthFailure) {
+            return const Center(
+              child: Text("State is Auth Failure"),
+            );
+          }
+          return BlocBuilder<WeatherBloc, WeatherState>(
+            builder: (context, state) {
+              // If the current state has an error display the error
+              // returned by the WeatherFailure
+              //
+              if (state is WeatherFailure) {
+                return Center(
+                  child: Text(state.error),
+                );
+              }
 
-          // Displayed when state = WeatherSuccess
-          //
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // MainWeatherCard
-                // [sky] - String of the icon describing the weather
-                // [temp] - Number of the current temp
-                //
-                MainWeatherCard(sky: data.currentSky, temp: data.currentTemp),
+              // If the state is not WeatherSuccess display the spinning progress
+              // indicator
+              //
+              if (state is! WeatherSuccess) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              }
 
-                // Space between widgets
-                //
-                const SizedBox(height: 20),
+              // Set data to the current weather model
+              //
+              final data = state.weatherModel;
+              print(data);
 
-                // Start of Hourly forecast section
-                //
-                const Text(
-                  'Hourly Forecast',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                // Space between widgets
-                //
-                const SizedBox(height: 8),
-
-                // Iterates through the ['list'] field and returns the hourly report
-                //
-                SizedBox(
-                  height: 120,
-                  child: ListView.builder(
-                    itemCount: 5,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      // Set data to the current hour being iterated
-                      final data = state
-                          .weatherModel.hourlyWeather.hourlyData[index + 1];
-
-                      // formatTime - /utils/date_formate.dart
-                      // formats the date "yyyy-MM-dd HH:mm:ss" to "h:mm a"
-                      // requires one parameter that is a String of the time
-                      //
-                      String formattedTime = formatTime(data.hourTime);
-
-                      // HourlyForecastItem
-                      //  displays the hour weather tile
-                      // [time] - String to display the time
-                      // [temperature] - String to display the temp
-                      // [sky] - String to determin the icon for the hours weather
-                      //
-                      return HourlyForecastItem(
-                        time: formattedTime,
-                        temperature: data.hourTemp.toStringAsFixed(1),
-                        sky: data.hourSky,
-                      );
-                    },
-                  ),
-                ),
-
-                // Space between widgets
-                //
-                const SizedBox(height: 20),
-
-                // Start of Additinaol information section at the bottom of page
-                // Displays the pressure, wind speed, and humidity
-                //
-                const Text(
-                  'Additional Information',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                // Space between widgets
-                //
-                const SizedBox(height: 8),
-
-                // Row that contains the current weather data
-                // wind speed, humidity, and pressure
-                //
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // Displayed when state = WeatherSuccess
+              //
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AdditionalInfoItem(
-                      icon: Icons.water_drop,
-                      label: 'Humidity',
-                      value: data.currentHumidity.toString(),
+                    // MainWeatherCard
+                    // [sky] - String of the icon describing the weather
+                    // [temp] - Number of the current temp
+                    //
+                    MainWeatherCard(
+                        sky: data.currentSky, temp: data.currentTemp),
+
+                    // Space between widgets
+                    //
+                    const SizedBox(height: 20),
+
+                    // Start of Hourly forecast section
+                    //
+                    const Text(
+                      'Hourly Forecast',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    AdditionalInfoItem(
-                      icon: Icons.air,
-                      label: 'Wind Speed',
-                      value: data.currentWindSpeed.toString(),
+
+                    // Space between widgets
+                    //
+                    const SizedBox(height: 8),
+
+                    // Iterates through the ['list'] field and returns the hourly report
+                    //
+                    SizedBox(
+                      height: 120,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          // Set data to the current hour being iterated
+                          final data = state
+                              .weatherModel.hourlyWeather.hourlyData[index + 1];
+
+                          // formatTime - /utils/date_formate.dart
+                          // formats the date "yyyy-MM-dd HH:mm:ss" to "h:mm a"
+                          // requires one parameter that is a String of the time
+                          //
+                          String formattedTime = formatTime(data.hourTime);
+
+                          // HourlyForecastItem
+                          //  displays the hour weather tile
+                          // [time] - String to display the time
+                          // [temperature] - String to display the temp
+                          // [sky] - String to determin the icon for the hours weather
+                          //
+                          return HourlyForecastItem(
+                            time: formattedTime,
+                            temperature: data.hourTemp.toStringAsFixed(1),
+                            sky: data.hourSky,
+                          );
+                        },
+                      ),
                     ),
-                    AdditionalInfoItem(
-                      icon: Icons.beach_access,
-                      label: 'Pressure',
-                      value: data.currentPressure.toString(),
+
+                    // Space between widgets
+                    //
+                    const SizedBox(height: 20),
+
+                    // Start of Additinaol information section at the bottom of page
+                    // Displays the pressure, wind speed, and humidity
+                    //
+                    const Text(
+                      'Additional Information',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    // Space between widgets
+                    //
+                    const SizedBox(height: 8),
+
+                    // Row that contains the current weather data
+                    // wind speed, humidity, and pressure
+                    //
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        AdditionalInfoItem(
+                          icon: Icons.water_drop,
+                          label: 'Humidity',
+                          value: data.currentHumidity.toString(),
+                        ),
+                        AdditionalInfoItem(
+                          icon: Icons.air,
+                          label: 'Wind Speed',
+                          value: data.currentWindSpeed.toString(),
+                        ),
+                        AdditionalInfoItem(
+                          icon: Icons.beach_access,
+                          label: 'Pressure',
+                          value: data.currentPressure.toString(),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

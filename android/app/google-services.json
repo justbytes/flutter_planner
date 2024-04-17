@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "390738255918",
+    "project_id": "flutter-planner-18484",
+    "storage_bucket": "flutter-planner-18484.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390738255918:android:10ede93c88da88c32a3fbf",
+        "android_client_info": {
+          "package_name": "com.example.flutter_planner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjHk0gPlUmV5lzyIo9fhpvhHMNx7bEMb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

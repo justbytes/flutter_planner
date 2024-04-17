@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/gradient_button.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
+import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/todo/components/todo_form.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 
@@ -50,49 +51,64 @@ class _AddTodoPageState extends State<AddTodoPage> {
           title: "Todo List",
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              // added space from top
-              //
-              const SizedBox(height: 10),
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-              // TodoForm
-              // holds tile and description textfields
-              // [titleController] - TextController for title field
-              // [descriptionController] - TextController for description field
-              // [enable] - bool that determins if the fields are editable
-              //
-              TodoForm(
-                enable: true,
-                descriptionController: todoDescriptionController,
-                titleController: todoTitleController,
-              ),
-
-              // added space
-              //
-              const SizedBox(height: 10),
-
-              // Calls TodoCubit and adds current values to state as a todo
-              // sends user back to todo_page.dart when finished
-              //
-              GradientButton(
-                onPressed: () {
-                  // add todo to state
+          if (state is AuthFailure) {
+            return const Center(
+              child: Text("State is Auth Failure"),
+            );
+          }
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  // added space from top
                   //
-                  BlocProvider.of<TodoCubit>(context).addTodo(
-                    todoTitleController.text.trim(),
-                    todoDescriptionController.text.trim(),
-                  );
-                  Navigator.of(context).pop();
-                },
-                text: "Add",
+                  const SizedBox(height: 10),
+
+                  // TodoForm
+                  // holds tile and description textfields
+                  // [titleController] - TextController for title field
+                  // [descriptionController] - TextController for description field
+                  // [enable] - bool that determins if the fields are editable
+                  //
+                  TodoForm(
+                    enable: true,
+                    descriptionController: todoDescriptionController,
+                    titleController: todoTitleController,
+                  ),
+
+                  // added space
+                  //
+                  const SizedBox(height: 10),
+
+                  // Calls TodoCubit and adds current values to state as a todo
+                  // sends user back to todo_page.dart when finished
+                  //
+                  GradientButton(
+                    onPressed: () {
+                      // add todo to state
+                      //
+                      BlocProvider.of<TodoCubit>(context).addTodo(
+                        todoTitleController.text.trim(),
+                        todoDescriptionController.text.trim(),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    text: "Add",
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

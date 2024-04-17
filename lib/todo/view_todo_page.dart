@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
+import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/todo/components/todo_form.dart';
 import 'package:flutter_planner/todo/components/todo_option_buttons.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
@@ -61,87 +62,103 @@ class ViewTodoPage extends StatelessWidget {
           title: "Todo",
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: BlocBuilder<TodoCubit, List<Todo>>(
-            builder: (context, state) {
-              // Id of the target todo
-              //
-              final todoId =
-                  ModalRoute.of(context)!.settings.arguments as String;
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-              // Get the todo by id
-              //
-              final todo = context.read<TodoCubit>().getTodoById(todoId);
+          if (state is AuthFailure) {
+            return const Center(
+              child: Text("State is Auth Initial"),
+            );
+          }
 
-              // Set the textController values to the todo values
-              //
-              final TextEditingController titleController =
-                  TextEditingController(text: todo!.name);
-              final TextEditingController descriptionController =
-                  TextEditingController(text: todo.description);
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+                  BlocBuilder<TodoCubit, List<Todo>>(builder: (context, state) {
+                // Id of the target todo
+                //
+                final todoId =
+                    ModalRoute.of(context)!.settings.arguments as String;
 
-              // Format the date of the todo to MM-DD-YYYY
-              //
-              DateTime dateTime = DateTime.parse(todo.createdAt.toString());
-              String formattedDate = DateFormat('MM-dd-yyyy').format(dateTime);
+                // Get the todo by id
+                //
+                final todo = context.read<TodoCubit>().getTodoById(todoId);
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // added space from top of page
-                  //
-                  const SizedBox(height: 10),
+                // Set the textController values to the todo values
+                //
+                final TextEditingController titleController =
+                    TextEditingController(text: todo!.name);
+                final TextEditingController descriptionController =
+                    TextEditingController(text: todo.description);
 
-                  // TodoForm
-                  // holds tile and description textfields
-                  // [titleController] - TextController for title field
-                  // [descriptionController] - TextController for description field
-                  // [enable] - bool that determins if the fields are editable
-                  //
-                  TodoForm(
-                    titleController: titleController,
-                    descriptionController: descriptionController,
-                    enable: false,
-                  ),
+                // Format the date of the todo to MM-DD-YYYY
+                //
+                DateTime dateTime = DateTime.parse(todo.createdAt.toString());
+                String formattedDate =
+                    DateFormat('MM-dd-yyyy').format(dateTime);
 
-                  // added space
-                  //
-                  const SizedBox(height: 10),
-
-                  // TodoOptionButtons
-                  // A row that holds the editoral options of the todo and displays the date created
-                  // [editOnPressed] - VoidCallback that handles the editing of a todo
-                  // [finishOnPressed] - VoidCallback that handles the finishing of a todo
-                  // [finishText] - Conditonal that displays either finished or revert based
-                  //  .
-                  //off the state of the todo
-                  // [date] - Date that the todo was created, MM-DD-YYYY
-                  //
-                  TodoOptionButtons(
-                    finishText: todo.finished ? "Revert" : "Finished",
-                    date: formattedDate,
-                    // Sends user to edit_todo.dart to edit the todo
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // added space from top of page
                     //
-                    editOnPressed: () {
-                      Navigator.pushNamed(context, '/edit-todo',
-                          arguments: todo);
-                    },
-                    // Sets todo's 'finished' to appropriate state
-                    // sends user back to todo_page.dart
+                    const SizedBox(height: 10),
+
+                    // TodoForm
+                    // holds tile and description textfields
+                    // [titleController] - TextController for title field
+                    // [descriptionController] - TextController for description field
+                    // [enable] - bool that determins if the fields are editable
                     //
-                    finishOnPressed: () {
-                      BlocProvider.of<TodoCubit>(context)
-                          .finishTodo(todo.id, todo.finished);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                    TodoForm(
+                      titleController: titleController,
+                      descriptionController: descriptionController,
+                      enable: false,
+                    ),
+
+                    // added space
+                    //
+                    const SizedBox(height: 10),
+
+                    // TodoOptionButtons
+                    // A row that holds the editoral options of the todo and displays the date created
+                    // [editOnPressed] - VoidCallback that handles the editing of a todo
+                    // [finishOnPressed] - VoidCallback that handles the finishing of a todo
+                    // [finishText] - Conditonal that displays either finished or revert based
+                    //  .
+                    //off the state of the todo
+                    // [date] - Date that the todo was created, MM-DD-YYYY
+                    //
+                    TodoOptionButtons(
+                      finishText: todo.finished ? "Revert" : "Finished",
+                      date: formattedDate,
+                      // Sends user to edit_todo.dart to edit the todo
+                      //
+                      editOnPressed: () {
+                        Navigator.pushNamed(context, '/edit-todo',
+                            arguments: todo);
+                      },
+                      // Sets todo's 'finished' to appropriate state
+                      // sends user back to todo_page.dart
+                      //
+                      finishOnPressed: () {
+                        BlocProvider.of<TodoCubit>(context)
+                            .finishTodo(todo.id, todo.finished);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              }),
+            ),
+          );
+        },
       ),
     );
   }

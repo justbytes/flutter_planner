@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/home_page.dart';
 import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/global_components/gradient_button.dart';
-import 'package:flutter_planner/login/components/login_field.dart';
+import 'package:flutter_planner/login/presentation/components/login_field.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -55,8 +55,7 @@ class _LoginScreenState extends State<LoginPage> {
               child: IntrinsicHeight(
                 child: Center(
                   child: Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Center children vertically
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         'Sign in.',

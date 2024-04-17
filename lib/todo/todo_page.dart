@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
+import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/todo/components/todo_text.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
 import 'package:flutter_planner/models/todo_model.dart';
@@ -49,43 +50,59 @@ class TodoPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: BlocBuilder<TodoCubit, List<Todo>>(
-        builder: (context, todos) {
-          // filter any finished todo and return only todos that are still
-          // in progress
-          //
-          final unfinishedTodos =
-              todos.where((todo) => !todo.finished).toList();
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-          // Display unfinished todos
-          //
-          return ListView.builder(
-              itemCount: unfinishedTodos.length,
-              itemBuilder: (context, index) {
-                final todo = unfinishedTodos[index];
+          if (state is AuthFailure) {
+            return const Center(
+              child: Text("State is Auth Failure"),
+            );
+          }
 
-                // Returns the title for every todo in a ListTitle
-                //
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 242, 239, 239),
-                      border: Border.all(width: 1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: ListTile(
-                      title: TodoText(
-                        text: todo.name,
+          return BlocBuilder<TodoCubit, List<Todo>>(
+            builder: (context, todos) {
+              // filter any finished todo and return only todos that are still
+              // in progress
+              //
+              final unfinishedTodos =
+                  todos.where((todo) => !todo.finished).toList();
+
+              // Display unfinished todos
+              //
+              return ListView.builder(
+                  itemCount: unfinishedTodos.length,
+                  itemBuilder: (context, index) {
+                    final todo = unfinishedTodos[index];
+
+                    // Returns the title for every todo in a ListTitle
+                    //
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 242, 239, 239),
+                          border: Border.all(width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ListTile(
+                          title: TodoText(
+                            text: todo.name,
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/view-todo',
+                                arguments: todo.id);
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/view-todo',
-                            arguments: todo.id);
-                      },
-                    ),
-                  ),
-                );
-              });
+                    );
+                  });
+            },
+          );
         },
       ),
 
