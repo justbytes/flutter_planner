@@ -32,9 +32,7 @@ ________________________________________________________________________________
 */
 
 class FinishedTodoPage extends StatelessWidget {
-  const FinishedTodoPage({
-    super.key,
-  });
+  const FinishedTodoPage({super.key});
 
   @override
   Widget build(BuildContext context) {

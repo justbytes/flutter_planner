@@ -53,7 +53,8 @@ ________________________________________________________________________________
 */
 
 class ViewTodoPage extends StatelessWidget {
-  const ViewTodoPage({super.key});
+  final String todoId;
+  const ViewTodoPage({super.key, required this.todoId});
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +87,10 @@ class ViewTodoPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child:
                   BlocBuilder<TodoCubit, List<Todo>>(builder: (context, state) {
-                // Id of the target todo
-                //
-                final todoId =
-                    ModalRoute.of(context)!.settings.arguments as String;
-
                 // Get the todo by id
                 //
-                final todo = context.read<TodoCubit>().getTodoById(todoId);
+                final Todo? todo =
+                    context.read<TodoCubit>().getTodoById(todoId);
 
                 // Set the textController values to the todo values
                 //

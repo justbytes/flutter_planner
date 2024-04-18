@@ -35,7 +35,8 @@ ________________________________________________________________________________
 */
 
 class EditTodoPage extends StatelessWidget {
-  EditTodoPage({super.key});
+  final Todo? todo;
+  EditTodoPage({super.key, required this.todo});
 
   // Declare text controllers
   //
@@ -44,12 +45,10 @@ class EditTodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todo = ModalRoute.of(context)!.settings.arguments as Todo;
-
     // Set textController values to the current value of todo
     //
-    todoTitleController.text = todo.name;
-    todoDescriptionController.text = todo.description;
+    todoTitleController.text = todo!.name;
+    todoDescriptionController.text = todo!.description;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +106,7 @@ class EditTodoPage extends StatelessWidget {
                       // update todo by sending current values and todo id
                       //
                       BlocProvider.of<TodoCubit>(context).editTodo(
-                        todo.id,
+                        todo!.id,
                         todoTitleController.text.trim(),
                         todoDescriptionController.text.trim(),
                       );
