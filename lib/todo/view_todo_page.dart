@@ -72,7 +72,7 @@ class ViewTodoPage extends StatelessWidget {
 
           if (state is AuthFailure) {
             return const Center(
-              child: Text("State is Auth Initial"),
+              child: Text("State is Auth Failure"),
             );
           }
 

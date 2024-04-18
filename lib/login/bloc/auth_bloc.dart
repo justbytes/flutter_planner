@@ -26,6 +26,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //
     on<AuthLoginRequested>(_onAuthLoginRequested);
 
+    on<AuthSignupRequested>(_onAuthSignupRequested);
+
     // Handle log out request
     //
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
@@ -63,12 +65,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  Future<void> _onAuthSignupRequested(
+      AuthSignupRequested event, Emitter<AuthState> emit) async {
+    try {
+      final email = event.email;
+      final password = event.password;
+      final username = event.username;
+
+      print("EMAIL $email, PASSWORD $password, USERNAME $username");
+
+      UserCredential userCredential =
+          await authRepository.signUpWithEmailAndPassowrd(
+        email: email,
+        password: password,
+        username: username,
+      );
+      return emit(AuthSuccess(user: userCredential));
+    } on Exception catch (e) {
+      return emit(AuthFailure(e.toString()));
+    }
+  }
+
   // Handle log out
   void _onAuthLogoutRequested(
       AuthLogoutRequested event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
       unawaited(authRepository.logOut());
+      emit(AuthInitial());
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }

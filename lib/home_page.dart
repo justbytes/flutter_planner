@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Welcome, User ${state.user.user?.email}',
+                    'Welcome, User ${state.user.user?.displayName}',
                   ),
                   const SizedBox(
                     height: 40,
@@ -62,6 +62,7 @@ class HomePage extends StatelessWidget {
                   GradientButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(AuthLogoutRequested());
+                      Navigator.pushNamed(context, '/');
                     },
                     text: 'Log Out',
                   ),

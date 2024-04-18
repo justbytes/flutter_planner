@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_planner/cache/cache.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -10,6 +11,7 @@ import 'package:flutter_planner/models/user_model.dart';
 class AuthRepository {
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   AuthRepository({
     required CacheClient cache,
@@ -37,13 +39,20 @@ class AuthRepository {
   /// Creates a new user with the provided [email] and [password].
   ///
   /// Throws a [SignUpWithEmailAndPasswordFailure] if an exception occurs.
-  Future<void> signUpWithEmailAndPassowrd(
-      {required String email, required String password}) async {
+  Future<UserCredential> signUpWithEmailAndPassowrd({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      await userCredential.user?.updateDisplayName(username);
+      return userCredential;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
