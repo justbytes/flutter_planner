@@ -51,8 +51,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final email = event.email;
       final password = event.password;
 
-      UserCredential userCredential = await authRepository
-          .logInWithEmailAndPassword(email: email, password: password);
+      User? userCredential = await authRepository.logInWithEmailAndPassword(
+          email: email, password: password);
 
       // if (password.length < 6) {
       //   return emit(AuthFailure(
@@ -74,8 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       print("EMAIL $email, PASSWORD $password, USERNAME $username");
 
-      UserCredential userCredential =
-          await authRepository.signUpWithEmailAndPassowrd(
+      User? userCredential = await authRepository.signUpWithEmailAndPassowrd(
         email: email,
         password: password,
         username: username,

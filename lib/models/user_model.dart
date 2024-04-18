@@ -5,13 +5,13 @@ import 'package:equatable/equatable.dart';
 class UserModel extends Equatable {
   final String? email;
   final String id;
-  final String? name;
+  final String? username;
   final String? photo;
 
   const UserModel({
     this.email,
     required this.id,
-    this.name,
+    this.username,
     this.photo,
   });
 
@@ -19,7 +19,7 @@ class UserModel extends Equatable {
     return <String, dynamic>{
       'email': email,
       'id': id,
-      'name': name,
+      'name': username,
       'photo': photo,
     };
   }
@@ -28,7 +28,7 @@ class UserModel extends Equatable {
     return UserModel(
       email: map['email'] as String?,
       id: map['id'] as String,
-      name: map['name'] as String?,
+      username: map['username'] as String?,
       photo: map['photo'] as String?,
     );
   }
@@ -47,5 +47,5 @@ class UserModel extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [email, id, name, photo];
+  List<Object?> get props => [email, id, username, photo];
 }

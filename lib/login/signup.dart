@@ -24,7 +24,6 @@ class Signup extends StatelessWidget {
         child: IntrinsicHeight(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Sign in.',
@@ -57,7 +56,7 @@ class Signup extends StatelessWidget {
                 GradientButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthSignupRequested(
-                          email: emailController.text,
+                          email: emailController.text.trim(),
                           password: passwordController.text.trim(),
                           username: usernameController.text.trim(),
                         ));

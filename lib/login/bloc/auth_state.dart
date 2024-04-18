@@ -39,7 +39,7 @@ class UserAuthenticated extends AuthState {
 }
 
 class AuthSuccess extends AuthState {
-  final UserCredential user;
+  final User? user;
   final AuthStatus status = AuthStatus.authenticated;
   AuthSuccess({required this.user});
 

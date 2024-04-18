@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/login/bloc/auth_bloc.dart';
+import 'package:flutter_planner/login/presentation/login_page.dart';
 import 'package:flutter_planner/weather/bloc/weather_bloc.dart';
 import 'package:flutter_planner/weather/presentation/components/additional_info_item.dart';
 import 'package:flutter_planner/weather/presentation/components/hourly_forecast_item.dart';
@@ -70,6 +71,10 @@ class _WeatherScreenState extends State<WeatherPage> {
       ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          if (state is AuthInitial) {
+            return const LoginPage();
+          }
+
           if (state is AuthLoading) {
             return const Center(
               child: CircularProgressIndicator(),

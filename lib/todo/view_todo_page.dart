@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/login/bloc/auth_bloc.dart';
+import 'package:flutter_planner/login/presentation/login_page.dart';
 import 'package:flutter_planner/todo/components/todo_form.dart';
 import 'package:flutter_planner/todo/components/todo_option_buttons.dart';
 import 'package:flutter_planner/todo/cubit/todo_cubit.dart';
@@ -64,6 +65,10 @@ class ViewTodoPage extends StatelessWidget {
       ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          if (state is AuthInitial) {
+            return const LoginPage();
+          }
+
           if (state is AuthLoading) {
             return const Center(
               child: CircularProgressIndicator(),

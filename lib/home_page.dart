@@ -4,9 +4,12 @@ import 'package:flutter_planner/global_components/app_bar_title.dart';
 import 'package:flutter_planner/global_components/reverse_gradient_button.dart';
 import 'package:flutter_planner/login/bloc/auth_bloc.dart';
 import 'package:flutter_planner/global_components/gradient_button.dart';
+import 'package:flutter_planner/login/presentation/login_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Welcome, User ${state.user.user?.displayName}',
+                    'Welcome, User ${state.user?.displayName}',
                   ),
                   const SizedBox(
                     height: 40,
@@ -62,7 +65,6 @@ class HomePage extends StatelessWidget {
                   GradientButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(AuthLogoutRequested());
-                      Navigator.pushNamed(context, '/');
                     },
                     text: 'Log Out',
                   ),
@@ -70,6 +72,7 @@ class HomePage extends StatelessWidget {
               ),
             );
           }
+
           if (state is AuthLoading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -82,9 +85,7 @@ class HomePage extends StatelessWidget {
             );
           }
           if (state is AuthInitial) {
-            return const Center(
-              child: Text("State is Auth Initial"),
-            );
+            return const LoginPage();
           }
           return const Center(
             child: Text("Looks like we're in some unknown state"),

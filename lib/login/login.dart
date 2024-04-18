@@ -25,7 +25,7 @@ class Login extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Sign up.',
+                  'Sign in.',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 50,
@@ -68,7 +68,7 @@ class Login extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
