@@ -4,11 +4,16 @@ part of 'auth_bloc.dart';
 enum AuthStatus { authenticated, unauthenticated }
 
 @immutable
+// Auth state handling authentication
+//
 abstract class AuthState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
+// A state that can set the user and their status
+// may not be needed
+//
 class UserAuthStatus extends AuthState {
   final AuthStatus status;
   final UserModel user;
@@ -18,6 +23,9 @@ class UserAuthStatus extends AuthState {
   String toString() => 'UserAuthStatus(status: $status)';
 }
 
+// Initial state of the AuthState
+// status is unauthenticatee
+//
 class AuthInitial extends AuthState {
   final AuthStatus status = AuthStatus.unauthenticated;
   AuthInitial();
@@ -26,18 +34,32 @@ class AuthInitial extends AuthState {
   String toString() => 'AuthInitial: $AuthInitial';
 }
 
+// This might need to be removed
+// code should be refactored
+// but this is used for conditionals to say if the user
+// is unauthenticated or authenticated
+//
 class UserUnauthenticated extends AuthState {
   final UserModel user;
   final AuthStatus status = AuthStatus.unauthenticated;
   UserUnauthenticated({required this.user});
 }
 
+// This might need to be removed
+// code should be refactored
+// but this is used for conditionals to say if the user
+// is unauthenticated or authenticated
+//
 class UserAuthenticated extends AuthState {
   final UserModel user;
   final AuthStatus status = AuthStatus.authenticated;
   UserAuthenticated({required this.user});
 }
 
+// Signals successful auth login
+// recieves a user
+// status is set to authenticated
+//
 class AuthSuccess extends AuthState {
   final User? user;
   final AuthStatus status = AuthStatus.authenticated;
@@ -50,6 +72,10 @@ class AuthSuccess extends AuthState {
   String toString() => 'AuthSuccess: $AuthSuccess';
 }
 
+// Signals that there was a Auth related failure
+// sets the status to unauthenticated
+// displays an error
+//
 class AuthFailure extends AuthState {
   final String error;
   final AuthStatus status = AuthStatus.unauthenticated;
@@ -62,6 +88,8 @@ class AuthFailure extends AuthState {
   String toString() => 'AuthFailure: $AuthFailure';
 }
 
+// Signals that the Auth is in a loading state
+//
 class AuthLoading extends AuthState {
   AuthLoading();
 

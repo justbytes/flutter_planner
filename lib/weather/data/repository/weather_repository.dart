@@ -18,12 +18,10 @@ class WeatherRepository {
 
   // getCurrentWeather
   // returns the req.body from the weatherProvider
-  Future<WeatherModel> getCurrentWeather() async {
+  Future<WeatherModel> getCurrentWeather(cityName, state) async {
     try {
       // Hard coded examples
       //
-      String cityName = 'San Diego';
-      String state = 'CA';
 
       // getCurrentWeather()
       // [cityName] - String of city
