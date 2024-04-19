@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_planner/src/themes/pallete.dart';
+import 'package:flutter_planner/views/authentication/presentation/components/social_loigns.dart';
 import 'package:flutter_planner/views/components/gradient_button.dart';
 import 'package:flutter_planner/views/authentication/bloc/auth_bloc.dart';
 import 'package:flutter_planner/views/components/login_field.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatelessWidget {
   final void Function()? onTap;
@@ -42,6 +45,14 @@ class Login extends StatelessWidget {
                   controller: passwordController,
                 ),
                 const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Divider(),
+                    ],
+                  ),
+                ),
                 GradientButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthLoginRequested(
@@ -71,7 +82,6 @@ class Login extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Column(
@@ -81,16 +91,7 @@ class Login extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                SignInButton(
-                  Buttons.google,
-                  text: "Sign up with Google",
-                  onPressed: () {},
-                ),
-                const SizedBox(height: 5),
-                SignInButton(
-                  Buttons.apple,
-                  onPressed: () {},
-                ),
+                const SocialLogins()
               ],
             ),
           ),

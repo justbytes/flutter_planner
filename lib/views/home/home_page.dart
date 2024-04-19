@@ -65,6 +65,7 @@ class HomePage extends StatelessWidget {
                   GradientButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(AuthLogoutRequested());
+                      Navigator.pushNamed(context, '/');
                     },
                     text: 'Log Out',
                   ),
@@ -84,8 +85,11 @@ class HomePage extends StatelessWidget {
               child: Text("There was an error"),
             );
           }
+          // Set login screen
           if (state is AuthInitial) {
-            return const LoginPage();
+            return const Center(
+              child: Text("Unauthorized"),
+            );
           }
           return const Center(
             child: Text("Looks like we're in some unknown state"),

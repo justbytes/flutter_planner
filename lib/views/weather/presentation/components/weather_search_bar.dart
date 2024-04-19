@@ -72,7 +72,6 @@ class WeatherSearchBar extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 20),
                               LoginField(
                                 hintText: "City",
                                 controller: cityController,
@@ -83,10 +82,17 @@ class WeatherSearchBar extends StatelessWidget {
                                 controller:
                                     stController, // Make sure this is for state
                               ),
-                              const SizedBox(height: 20),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Divider(),
+                                  ],
+                                ),
+                              ),
                               GradientButton(
                                 onPressed: onPressed,
-                                text: "change city",
+                                text: "Search",
                               ),
                             ],
                           ),

@@ -6,7 +6,7 @@ import 'package:flutter_planner/src/app/app_bloc_observer.dart';
 import 'package:flutter_planner/cache/cache.dart';
 import 'package:flutter_planner/views/authentication/data/repository/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_planner/firebase_options.dart';
+import 'package:flutter_planner/config/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

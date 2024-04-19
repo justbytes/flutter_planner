@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_planner/views/authentication/presentation/components/social_loigns.dart';
 import 'package:flutter_planner/views/components/gradient_button.dart';
 import 'package:flutter_planner/views/authentication/bloc/auth_bloc.dart';
 import 'package:flutter_planner/views/components/login_field.dart';
@@ -24,6 +25,7 @@ class Signup extends StatelessWidget {
         child: IntrinsicHeight(
           child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Sign up.',
@@ -93,17 +95,8 @@ class Signup extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                SignInButton(
-                  Buttons.google,
-                  text: "Sign up with Google",
-                  onPressed: () {},
-                ),
-                const SizedBox(height: 5),
-                SignInButton(
-                  Buttons.apple,
-                  onPressed: () {},
-                ),
+                const SizedBox(height: 10),
+                const SocialLogins()
               ],
             ),
           ),
