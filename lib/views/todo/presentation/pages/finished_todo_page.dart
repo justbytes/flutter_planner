@@ -36,64 +36,77 @@ class FinishedTodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Finished Todos',
-            style: TextStyle(
-              fontSize: 36,
-              color: Color.fromARGB(255, 242, 239, 239),
-              fontWeight: FontWeight.bold,
-            )),
-      ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is AuthInitial) {
-            return const LoginPage();
-          }
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: ((context, state) {
+        if (state is AuthInitial) {
+          return const LoginPage();
+        }
 
-          if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (state is AuthFailure) {
-            return const Center(
-              child: Text("State is Auth Failure"),
-            );
-          }
-          return BlocBuilder<TodoCubit, List<Todo>>(
-            builder: (context, todos) {
-              final finishedTodos =
-                  todos.where((todo) => todo.finished).toList();
-              return ListView.builder(
-                  itemCount: finishedTodos.length,
-                  itemBuilder: (context, index) {
-                    final todo = finishedTodos[index];
-
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 242, 239, 239),
-                            border: Border.all(width: 1),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: ListTile(
-                          title: TodoText(
-                            text: todo.name,
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/view-todo',
-                                arguments: todo.id);
-                          },
-                        ),
-                      ),
-                    );
-                  });
-            },
+        if (state is AuthLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        }
+
+        if (state is AuthFailure) {
+          return const Center(
+            child: Text("State is Auth Failure"),
+          );
+        }
+
+        if (state is AuthSuccess || state is GoogleSuccess) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Finished Todos',
+                  style: TextStyle(
+                    fontSize: 36,
+                    color: Color.fromARGB(255, 242, 239, 239),
+                    fontWeight: FontWeight.bold,
+                  )),
+            ),
+            body: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return BlocBuilder<TodoCubit, List<Todo>>(
+                  builder: (context, todos) {
+                    final finishedTodos =
+                        todos.where((todo) => todo.finished).toList();
+                    return ListView.builder(
+                        itemCount: finishedTodos.length,
+                        itemBuilder: (context, index) {
+                          final todo = finishedTodos[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 242, 239, 239),
+                                  border: Border.all(width: 1),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: ListTile(
+                                title: TodoText(
+                                  text: todo.name,
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/view-todo',
+                                      arguments: todo.id);
+                                },
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                );
+              },
+            ),
+          );
+        }
+        // Displays current state is unkown
+        //
+        return const Center(
+          child: Text("Looks like we're in some unknown state"),
+        );
+      }),
     );
   }
 }

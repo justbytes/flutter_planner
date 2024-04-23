@@ -21,6 +21,8 @@ class HomePage extends StatelessWidget {
       ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          // Displays UI for a User logged in with Google Provider
+          //
           if (state is GoogleSuccess) {
             return Center(
               child: Column(
@@ -62,23 +64,75 @@ class HomePage extends StatelessWidget {
             );
           }
 
+          // Displays UI for User logged in with Email & Password
+          if (state is AuthSuccess) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome, User ${state.user?.displayName}',
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  GradientButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/todo");
+                    },
+                    text: 'What Todo',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ReverseGradientButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/weather');
+                    },
+                    text: 'Weather Center',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GradientButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(AuthLogoutRequested());
+                      Navigator.pushNamed(context, '/');
+                    },
+                    text: 'Log Out',
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // Displays a progress spinning bar
+          //
           if (state is AuthLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
+          // Diplays statement to inform of an Auth Error
+          // [TODO]: get the specific error when AuthFailure occurs
+          //
           if (state is AuthFailure) {
             return const Center(
-              child: Text("There was an error"),
+              child: Text("There was an Auth Error"),
             );
           }
-          // Set login screen
+
+          // Display Unauthorized screen to block unauthorized users
+          //
           if (state is AuthInitial) {
             return const Center(
               child: Text("Unauthorized"),
             );
           }
+
+          // Displays current state is unkown
+          //
           return const Center(
             child: Text("Looks like we're in some unknown state"),
           );

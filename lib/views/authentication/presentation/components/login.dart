@@ -38,7 +38,7 @@ class Login extends StatelessWidget {
                       controller: emailController,
                     ),
                     const SizedBox(height: 15),
-                    LoginField(
+                    ObscureField(
                       hintText: 'Password',
                       controller: passwordController,
                     ),
@@ -52,10 +52,34 @@ class Login extends StatelessWidget {
                     ),
                     GradientButton(
                       onPressed: () {
-                        context.read<AuthBloc>().add(AuthLoginRequested(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                            ));
+                        if (emailController.text != "" &&
+                            passwordController.text != '') {
+                          context.read<AuthBloc>().add(AuthLoginRequested(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              ));
+                        } else {
+                          emailController.text = '';
+                          passwordController.text = '';
+
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Sign In Erorr"),
+                                  content: const Text(
+                                    "Email and password must be filled in.",
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Ok"))
+                                  ],
+                                );
+                              });
+                        }
                       },
                       text: 'Login',
                     ),

@@ -59,68 +59,6 @@ class _LoginScreenState extends State<LoginPage> {
               onTap: togglePages,
             );
           }
-
-          // return SingleChildScrollView(
-          //   child: ConstrainedBox(
-          //     constraints: BoxConstraints(
-          //       minHeight: MediaQuery.of(context).size.height,
-          //     ),
-          //     child: IntrinsicHeight(
-          //       child: Center(
-          //         child: Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             const Text(
-          //               'Sign in.',
-          //               style: TextStyle(
-          //                 fontWeight: FontWeight.bold,
-          //                 fontSize: 50,
-          //               ),
-          //             ),
-          //             const SizedBox(height: 50),
-          //             LoginField(
-          //               hintText: 'Email',
-          //               controller: emailController,
-          //             ),
-          //             const SizedBox(height: 15),
-          //             LoginField(
-          //               hintText: 'Password',
-          //               controller: passwordController,
-          //             ),
-          //             const SizedBox(height: 20),
-          //             GradientButton(
-          //               onPressed: () {
-          //                 context.read<AuthBloc>().add(AuthLoginRequested(
-          //                       email: emailController.text.trim(),
-          //                       password: passwordController.text.trim(),
-          //                     ));
-          //               },
-          //               text: 'Login',
-          //             ),
-          //             const SizedBox(height: 20),
-          //             const Text(
-          //               'or',
-          //               style: TextStyle(
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //             const SizedBox(height: 50),
-          //             SignInButton(
-          //               Buttons.google,
-          //               text: "Sign up with Google",
-          //               onPressed: () {},
-          //             ),
-          //             const SizedBox(height: 5),
-          //             SignInButton(
-          //               Buttons.apple,
-          //               onPressed: () {},
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // );
         },
       ),
     );

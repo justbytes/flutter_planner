@@ -38,7 +38,23 @@ class SocialLogins extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             onPressed: () {
-              // Your sign-in logic here
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Currently Unavailable"),
+                      content: const Text(
+                        "Apple sign in is still in development. Please try using google or a email and password login",
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Ok"))
+                      ],
+                    );
+                  });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.black,
@@ -56,7 +72,7 @@ class SocialLogins extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.apple, color: Colors.white), // Apple icon
+                    Icon(Icons.apple, color: Colors.white),
                     Text(' Sign in with Apple',
                         style: TextStyle(color: Colors.white)),
                   ],

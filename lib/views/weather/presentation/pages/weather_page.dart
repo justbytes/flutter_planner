@@ -60,199 +60,206 @@ class _WeatherScreenState extends State<WeatherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const AppBarTitle(
-          title: "Weather App",
-        ),
-        centerTitle: true,
-        actions: [
-          // Refetch weather data
-          //
-          IconButton(
-            onPressed: () {
-              context.read<WeatherBloc>().add(WeatherFetched(
-                    city: cityController.text.trim(),
-                    st: stController.text.trim(),
-                  ));
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
-      ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is AuthInitial) {
-            return const LoginPage();
-          }
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthInitial) {
+          return const LoginPage();
+        }
 
-          if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        if (state is AuthLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          if (state is AuthFailure) {
-            return const Center(
-              child: Text("State is Auth Failure"),
-            );
-          }
+        if (state is AuthFailure) {
+          return const Center(
+            child: Text("State is Auth Failure"),
+          );
+        }
 
-          return BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              // If the current state has an error display the error
-              // returned by the WeatherFailure
-              //
-              if (state is WeatherFailure) {
-                return Center(
-                  child: Text(state.error),
-                );
-              }
+        if (state is AuthSuccess || state is GoogleSuccess) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const AppBarTitle(
+                title: "Weather App",
+              ),
+              centerTitle: true,
+              actions: [
+                // Refetch weather data
+                //
+                IconButton(
+                  onPressed: () {
+                    context.read<WeatherBloc>().add(WeatherFetched(
+                          city: cityController.text.trim(),
+                          st: stController.text.trim(),
+                        ));
+                  },
+                  icon: const Icon(Icons.refresh),
+                ),
+              ],
+            ),
+            body: BlocBuilder<WeatherBloc, WeatherState>(
+              builder: (context, state) {
+                // If the current state has an error display the error
+                // returned by the WeatherFailure
+                //
+                if (state is WeatherFailure) {
+                  return Center(
+                    child: Text(state.error),
+                  );
+                }
 
-              // If the state is not WeatherSuccess display the spinning progress
-              // indicator
-              //
-              if (state is! WeatherSuccess) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
+                // If the state is not WeatherSuccess display the spinning progress
+                // indicator
+                //
+                if (state is! WeatherSuccess) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
 
-              // Set data to the current weather model
-              //
-              final data = state.weatherModel;
+                // Set data to the current weather model
+                //
+                final data = state.weatherModel;
 
-              // Displayed when state = WeatherSuccess
-              //
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WeatherSearchBar(
-                        cityController: cityController,
-                        stController: stController,
-                        onPressed: () {
-                          context.read<WeatherBloc>().add(
-                                WeatherFetched(
-                                  city: cityController.text.trim(),
-                                  st: stController.text.trim(),
-                                ),
-                              );
-                          Navigator.pop(context);
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-                      // MainWeatherCard
-                      // [sky] - String of the icon describing the weather
-                      // [temp] - Number of the current temp
-                      //
-                      MainWeatherCard(
-                          sky: data.currentSky, temp: data.currentTemp),
-
-                      // Space between widgets
-                      //
-                      const SizedBox(height: 20),
-
-                      // Start of Hourly forecast section
-                      //
-                      const Text(
-                        'Hourly Forecast',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      // Space between widgets
-                      //
-                      const SizedBox(height: 8),
-
-                      // Iterates through the ['list'] field and returns the hourly report
-                      //
-                      SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          itemCount: 5,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            // Set data to the current hour being iterated
-                            final data = state.weatherModel.hourlyWeather
-                                .hourlyData[index + 1];
-
-                            // formatTime - /utils/date_formate.dart
-                            // formats the date "yyyy-MM-dd HH:mm:ss" to "h:mm a"
-                            // requires one parameter that is a String of the time
-                            //
-                            String formattedTime = formatTime(data.hourTime);
-
-                            // HourlyForecastItem
-                            //  displays the hour weather tile
-                            // [time] - String to display the time
-                            // [temperature] - String to display the temp
-                            // [sky] - String to determin the icon for the hours weather
-                            //
-                            return HourlyForecastItem(
-                              time: formattedTime,
-                              temperature: data.hourTemp.toStringAsFixed(1),
-                              sky: data.hourSky,
-                            );
+                // Displayed when state = WeatherSuccess
+                //
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WeatherSearchBar(
+                          cityController: cityController,
+                          stController: stController,
+                          onPressed: () {
+                            context.read<WeatherBloc>().add(
+                                  WeatherFetched(
+                                    city: cityController.text.trim(),
+                                    st: stController.text.trim(),
+                                  ),
+                                );
+                            Navigator.pop(context);
                           },
                         ),
-                      ),
 
-                      // Space between widgets
-                      //
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
+                        // MainWeatherCard
+                        // [sky] - String of the icon describing the weather
+                        // [temp] - Number of the current temp
+                        //
+                        MainWeatherCard(
+                            sky: data.currentSky, temp: data.currentTemp),
 
-                      // Start of Additinaol information section at the bottom of page
-                      // Displays the pressure, wind speed, and humidity
-                      //
-                      const Text(
-                        'Additional Information',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                        // Space between widgets
+                        //
+                        const SizedBox(height: 20),
+
+                        // Start of Hourly forecast section
+                        //
+                        const Text(
+                          'Hourly Forecast',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
-                      // Space between widgets
-                      //
-                      const SizedBox(height: 8),
+                        // Space between widgets
+                        //
+                        const SizedBox(height: 8),
 
-                      // Row that contains the current weather data
-                      // wind speed, humidity, and pressure
-                      //
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          AdditionalInfoItem(
-                            icon: Icons.water_drop,
-                            label: 'Humidity',
-                            value: data.currentHumidity.toString(),
+                        // Iterates through the ['list'] field and returns the hourly report
+                        //
+                        SizedBox(
+                          height: 120,
+                          child: ListView.builder(
+                            itemCount: 5,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              // Set data to the current hour being iterated
+                              final data = state.weatherModel.hourlyWeather
+                                  .hourlyData[index + 1];
+
+                              // formatTime - /utils/date_formate.dart
+                              // formats the date "yyyy-MM-dd HH:mm:ss" to "h:mm a"
+                              // requires one parameter that is a String of the time
+                              //
+                              String formattedTime = formatTime(data.hourTime);
+
+                              // HourlyForecastItem
+                              //  displays the hour weather tile
+                              // [time] - String to display the time
+                              // [temperature] - String to display the temp
+                              // [sky] - String to determin the icon for the hours weather
+                              //
+                              return HourlyForecastItem(
+                                time: formattedTime,
+                                temperature: data.hourTemp.toStringAsFixed(1),
+                                sky: data.hourSky,
+                              );
+                            },
                           ),
-                          AdditionalInfoItem(
-                            icon: Icons.air,
-                            label: 'Wind Speed',
-                            value: data.currentWindSpeed.toString(),
+                        ),
+
+                        // Space between widgets
+                        //
+                        const SizedBox(height: 20),
+
+                        // Start of Additinaol information section at the bottom of page
+                        // Displays the pressure, wind speed, and humidity
+                        //
+                        const Text(
+                          'Additional Information',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                          AdditionalInfoItem(
-                            icon: Icons.beach_access,
-                            label: 'Pressure',
-                            value: data.currentPressure.toString(),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+
+                        // Space between widgets
+                        //
+                        const SizedBox(height: 8),
+
+                        // Row that contains the current weather data
+                        // wind speed, humidity, and pressure
+                        //
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            AdditionalInfoItem(
+                              icon: Icons.water_drop,
+                              label: 'Humidity',
+                              value: data.currentHumidity.toString(),
+                            ),
+                            AdditionalInfoItem(
+                              icon: Icons.air,
+                              label: 'Wind Speed',
+                              value: data.currentWindSpeed.toString(),
+                            ),
+                            AdditionalInfoItem(
+                              icon: Icons.beach_access,
+                              label: 'Pressure',
+                              value: data.currentPressure.toString(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
-        },
-      ),
+        }
+        // Displays current state is unkown
+        //
+        return const Center(
+          child: Text("Looks like we're in some unknown state"),
+        );
+      },
     );
   }
 }

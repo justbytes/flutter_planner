@@ -4,7 +4,6 @@ import 'package:flutter_planner/views/authentication/presentation/components/soc
 import 'package:flutter_planner/views/components/gradient_button.dart';
 import 'package:flutter_planner/views/authentication/bloc/auth_bloc.dart';
 import 'package:flutter_planner/views/components/login_field.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class Signup extends StatelessWidget {
   final void Function()? onTap;
@@ -17,6 +16,7 @@ class Signup extends StatelessWidget {
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController confirmPasswordController =
         TextEditingController();
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -46,12 +46,12 @@ class Signup extends StatelessWidget {
                       controller: emailController,
                     ),
                     const SizedBox(height: 15),
-                    LoginField(
+                    ObscureField(
                       hintText: 'Password',
                       controller: passwordController,
                     ),
                     const SizedBox(height: 15),
-                    LoginField(
+                    ObscureField(
                       hintText: 'Confirm Password',
                       controller: confirmPasswordController,
                     ),
@@ -65,11 +65,39 @@ class Signup extends StatelessWidget {
                     ),
                     GradientButton(
                       onPressed: () {
-                        context.read<AuthBloc>().add(AuthSignupRequested(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                              username: usernameController.text.trim(),
-                            ));
+                        bool valid = _validateFields(
+                          usernameController.text.trim(),
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                          confirmPasswordController.text.trim(),
+                        );
+                        if (valid) {
+                          context.read<AuthBloc>().add(AuthSignupRequested(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                                username: usernameController.text.trim(),
+                              ));
+                        } else {
+                          passwordController.text = '';
+                          confirmPasswordController.text = '';
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Sign Up Erorr"),
+                                  content: const Text(
+                                    "Fill out the entire form and ensure your passwords match.",
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Ok"))
+                                  ],
+                                );
+                              });
+                        }
                       },
                       text: 'Sign Up',
                     ),
@@ -115,5 +143,26 @@ class Signup extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+// Bool Function with a nested conditional
+// Outer conditial checks to ensure none of the fields are an empty string
+// Innter conditial checks that the passwords match
+// returns a bool of true if form was valid meaning no empty strings and matching passwords
+//
+bool _validateFields(
+    String email, String displayName, String password, String confirmPassword) {
+  if (email != '' &&
+      displayName != '' &&
+      password != '' &&
+      confirmPassword != '') {
+    if (password == confirmPassword) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
   }
 }
