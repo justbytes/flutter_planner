@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_planner/src/themes/pallete.dart';
 import 'package:flutter_planner/views/authentication/presentation/components/social_loigns.dart';
 import 'package:flutter_planner/views/components/gradient_button.dart';
 import 'package:flutter_planner/views/authentication/bloc/auth_bloc.dart';
 import 'package:flutter_planner/views/components/login_field.dart';
-import 'package:sign_in_button/sign_in_button.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatelessWidget {
   final void Function()? onTap;
@@ -25,7 +22,7 @@ class Login extends StatelessWidget {
         child: IntrinsicHeight(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Text(
                   'login.',
@@ -34,64 +31,70 @@ class Login extends StatelessWidget {
                     fontSize: 50,
                   ),
                 ),
-                const SizedBox(height: 25),
-                LoginField(
-                  hintText: 'Email',
-                  controller: emailController,
-                ),
-                const SizedBox(height: 15),
-                LoginField(
-                  hintText: 'Password',
-                  controller: passwordController,
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Divider(),
-                    ],
-                  ),
-                ),
-                GradientButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(AuthLoginRequested(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                        ));
-                  },
-                  text: 'Login',
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    Text(
-                      "Don't have an account? ",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
+                    LoginField(
+                      hintText: 'Email',
+                      controller: emailController,
                     ),
-                    GestureDetector(
-                      onTap: onTap,
-                      child: Text(
-                        "Create Acount",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(height: 15),
+                    LoginField(
+                      hintText: 'Password',
+                      controller: passwordController,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Divider(),
+                        ],
                       ),
                     ),
+                    GradientButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(AuthLoginRequested(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            ));
+                      },
+                      text: 'Login',
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        GestureDetector(
+                          onTap: onTap,
+                          child: Text(
+                            "Create Acount",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Divider(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SocialLogins(
+                      onGooglePressed: () {
+                        context.read<AuthBloc>().add(GoogleLoginRequested());
+                      },
+                    ),
                   ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Divider(),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const SocialLogins()
+                )
               ],
             ),
           ),

@@ -4,7 +4,6 @@ import 'package:flutter_planner/views/components/app_bar_title.dart';
 import 'package:flutter_planner/views/components/reverse_gradient_button.dart';
 import 'package:flutter_planner/views/authentication/bloc/auth_bloc.dart';
 import 'package:flutter_planner/views/components/gradient_button.dart';
-import 'package:flutter_planner/views/authentication/presentation/login_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -20,26 +19,15 @@ class HomePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          // if (state is AuthInitial) {
-          //   Navigator.pushAndRemoveUntil(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => const LoginPage(),
-          //     ),
-          //     (route) => false,
-          //   );
-          // }
-        },
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthSuccess) {
+          if (state is GoogleSuccess) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Welcome, User ${state.user?.displayName}',
+                    'Welcome, User ${state.user.user?.displayName}',
                   ),
                   const SizedBox(
                     height: 40,

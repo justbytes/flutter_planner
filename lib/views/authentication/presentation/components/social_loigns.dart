@@ -3,7 +3,8 @@ import 'package:flutter_planner/src/themes/pallete.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SocialLogins extends StatelessWidget {
-  const SocialLogins({super.key});
+  final void Function() onGooglePressed;
+  const SocialLogins({super.key, required this.onGooglePressed});
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +13,14 @@ class SocialLogins extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
-            onPressed: () {
-              // Your sign-in logic here
-            },
+            onPressed: onGooglePressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
+              backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7),
                   side: const BorderSide(
                     color: Pallete.borderColor,
-                    width: 3,
+                    width: 1,
                   )),
             ),
             child: Row(
@@ -44,13 +41,12 @@ class SocialLogins extends StatelessWidget {
               // Your sign-in logic here
             },
             style: ElevatedButton.styleFrom(
-              shadowColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent, // No shadow
+              backgroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7),
                   side: const BorderSide(
                     color: Pallete.borderColor,
-                    width: 3,
+                    width: 1,
                   )),
             ),
             child: const Padding(

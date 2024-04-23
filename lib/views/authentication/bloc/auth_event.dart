@@ -23,6 +23,8 @@ final class AuthLoginRequested extends AuthEvent {
   });
 }
 
+final class GoogleLoginRequested extends AuthEvent {}
+
 final class AuthSignupRequested extends AuthEvent {
   final String email;
   final String password;

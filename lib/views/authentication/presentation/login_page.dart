@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginPage> {
             )));
           }
 
-          if (state is AuthSuccess) {
+          if (state is AuthSuccess || state is GoogleSuccess) {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

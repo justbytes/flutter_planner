@@ -28,6 +28,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthSignupRequested>(_onAuthSignupRequested);
 
+    on<GoogleLoginRequested>(_onGoogleLoginRequested);
+
     // Handle log out request
     //
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
@@ -40,6 +42,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ? UserAuthenticated(user: event.user)
         : AuthInitial());
   }
+
+/*------------------------- Email and Password Auth ------------------------- */
 
   // Login with Email Passowrd
   //
@@ -72,8 +76,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final password = event.password;
       final username = event.username;
 
-      print("EMAIL $email, PASSWORD $password, USERNAME $username");
-
       User? userCredential = await authRepository.signUpWithEmailAndPassowrd(
         email: email,
         password: password,
@@ -85,6 +87,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+/*------------------------------ Social Logins ------------------------------ */
+
+  Future<void> _onGoogleLoginRequested(
+      GoogleLoginRequested event, Emitter<AuthState> emit) async {
+    try {
+      UserCredential userCredential = await authRepository.signInWithGoogle();
+      return emit(GoogleSuccess(user: userCredential));
+    } on Exception catch (e) {
+      return emit(AuthFailure(e.toString()));
+    }
+  }
+
+/*--------------------------------- Logout ---------------------------------- */
   // Handle log out
   void _onAuthLogoutRequested(
       AuthLogoutRequested event, Emitter<AuthState> emit) async {

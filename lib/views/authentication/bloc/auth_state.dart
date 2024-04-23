@@ -72,6 +72,18 @@ class AuthSuccess extends AuthState {
   String toString() => 'AuthSuccess: $AuthSuccess';
 }
 
+class GoogleSuccess extends AuthState {
+  final UserCredential user;
+  final AuthStatus status = AuthStatus.authenticated;
+  GoogleSuccess({required this.user});
+
+  @override
+  List<Object?> get props => [status, user];
+
+  @override
+  String toString() => 'GoogleSuccess: $GoogleSuccess';
+}
+
 // Signals that there was a Auth related failure
 // sets the status to unauthenticated
 // displays an error

@@ -25,7 +25,7 @@ class Signup extends StatelessWidget {
         child: IntrinsicHeight(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Text(
                   'Sign up.',
@@ -34,69 +34,81 @@ class Signup extends StatelessWidget {
                     fontSize: 50,
                   ),
                 ),
-                const SizedBox(height: 50),
-                LoginField(
-                  hintText: 'Username',
-                  controller: usernameController,
-                ),
-                const SizedBox(height: 15),
-                LoginField(
-                  hintText: 'Email',
-                  controller: emailController,
-                ),
-                const SizedBox(height: 15),
-                LoginField(
-                  hintText: 'Password',
-                  controller: passwordController,
-                ),
-                const SizedBox(height: 15),
-                LoginField(
-                  hintText: 'Confirm Password',
-                  controller: confirmPasswordController,
-                ),
-                const SizedBox(height: 20),
-                GradientButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(AuthSignupRequested(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                          username: usernameController.text.trim(),
-                        ));
-                  },
-                  text: 'Sign Up',
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    Text(
-                      "Already have an account? ",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
+                    LoginField(
+                      hintText: 'Username',
+                      controller: usernameController,
                     ),
-                    GestureDetector(
-                      onTap: onTap,
-                      child: Text(
-                        "Login here",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                    const SizedBox(height: 15),
+                    LoginField(
+                      hintText: 'Email',
+                      controller: emailController,
+                    ),
+                    const SizedBox(height: 15),
+                    LoginField(
+                      hintText: 'Password',
+                      controller: passwordController,
+                    ),
+                    const SizedBox(height: 15),
+                    LoginField(
+                      hintText: 'Confirm Password',
+                      controller: confirmPasswordController,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Divider(),
+                        ],
                       ),
-                    )
+                    ),
+                    GradientButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(AuthSignupRequested(
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                              username: usernameController.text.trim(),
+                            ));
+                      },
+                      text: 'Sign Up',
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account? ",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        GestureDetector(
+                          onTap: onTap,
+                          child: Text(
+                            "Login here",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Divider(),
+                        ],
+                      ),
+                    ),
+                    SocialLogins(
+                      onGooglePressed: () {
+                        context.read<AuthBloc>().add(GoogleLoginRequested());
+                      },
+                    ),
                   ],
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Divider(),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SocialLogins()
+                )
               ],
             ),
           ),
